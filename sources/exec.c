@@ -6,27 +6,13 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 13:17:49 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/01 12:26:47 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/01 15:37:37 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-
-int	ft_builtins(t_minishell *data)
-{
-	if (!strcmp(data->cmds->full_cmd[0], "pwd"))
-		return (ft_built_in_pwd(), 1);
-	if (!strcmp(data->cmds->full_cmd[0], "env"))
-		return (ft_built_in_env(&data->head_env), 1);
-	if (!strcmp(data->cmds->full_cmd[0], "export"))
-		return (ft_built_in_export(&data->head_env, data->cmds->full_cmd), 1);
-	if (!strcmp(data->cmds->full_cmd[0], "cd"))
-		return (1);
-	if (!strcmp(data->cmds->full_cmd[0], "unset"))
-		return (1);
-	return (0);
-}
+int	ft_builtins(t_minishell *data);
 
 /* Handles the executions of the commands and returns the corresponding error
 if the command was not found. */
@@ -49,7 +35,8 @@ void	ft_exec(t_minishell *data)
 			free(cmd);
 		}
 	}
-	if (access(data->cmds->full_cmd[0], X_OK) == -1)
+	if (!ft_strncmp(data->cmds->full_cmd[0], "./", 2) \
+	&& access(data->cmds->full_cmd[0], X_OK) == -1)
 		return (perror(data->cmds->full_cmd[0]));
 	ft_putstr_fd("command not found: ", 2);
 	ft_putstr_fd(data->cmds->full_cmd[0], 2);
@@ -78,6 +65,20 @@ void	ft_incubator(t_minishell *data)
 	exit(127);
 }
 
+int	pipex_heredoc(t_minishell *data)
+{
+	if (data->cmds->here_doc == 1)
+	{
+		if (!data->cmds->limiter)
+			return (0);
+		if (dup2(data->cmds->here_doc_pipe[0], STDIN_FILENO) == -1)
+			return (perror("dup2 heredoc"), 0);
+		if (close(data->cmds->here_doc_pipe[0]) == -1)
+			return (perror("close pipe"), 0);
+	}
+	return (1);
+}
+
 /* Creates a child process for every command and links them together
 with pipes */
 
@@ -85,15 +86,8 @@ void	pipex_commands(t_minishell *data)
 {
 	while (data->cmds)
 	{
-		if (data->cmds->here_doc == 1)
-		{
-			if (!data->cmds->limiter)
-				return ;
-			if (dup2(data->cmds->here_doc_pipe[0], STDIN_FILENO) == -1)
-				return (perror("dup2 heredoc"));
-			if (close(data->cmds->here_doc_pipe[0]) == -1)
-				return (perror("close pipe"));
-		}
+		if (!pipex_heredoc(data))
+			return ;
 		if (pipe(data->end) == -1)
 			return ((void)perror("pipe"));
 		data->cmds->cmd_pid = fork();

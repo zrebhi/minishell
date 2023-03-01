@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 16:03:53 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/02/27 18:51:48 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/01 15:23:07 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ void	ft_print_cmdlist(t_cmdlist *cmds)
 		i = -1;
 		while (cmds->full_cmd[++i])
 			printf("%s\n", cmds->full_cmd[i]);
-		printf("infile : %d\noutfile : %d\nhere_doc : %d\n", cmds->infile, cmds->outfile, cmds->here_doc);
+		printf("infile : %d\noutfile : %d\nhere_doc : %d\n", \
+		cmds->infile, cmds->outfile, cmds->here_doc);
 		cmds = cmds->next;
 		printf("\n");
 	}

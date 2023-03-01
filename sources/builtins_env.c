@@ -6,11 +6,23 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 12:37:40 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/02/28 13:28:06 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/01 15:22:24 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	ft_built_in_env(t_env **head)
+{
+	t_env	*temp;
+
+	temp = *head;
+	while (temp)
+	{
+		printf("%s=%s\n", temp->key, temp->value);
+		temp = temp->next;
+	}
+}
 
 void ft_print_env_sorted(t_env *env)
 {

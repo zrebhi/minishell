@@ -6,7 +6,7 @@ INC_DIR        :=    includes/
 HEADERS        := $(addprefix $(INC_DIR), $(INC))
 
 SRC_DIR        :=    sources/
-SRC            :=    main.c exec.c parsing.c cmdlist.c cmdlist_utils.c expand.c builtins.c builtins_env.c
+SRC            :=    builtins.c builtins_env.c cmdlist.c cmdlist_utils.c env_list_utils.c exec.c expand.c heredoc.c main.c parse_env.c redirections.c
 
 LIBFT_DIR	   :=    libft/
 LIBFT_A		   :=    $(LIBFT_DIR)libft.a

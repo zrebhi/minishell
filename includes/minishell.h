@@ -78,6 +78,8 @@ void		ft_print_cmdlist(t_cmdlist *cmds);
 
 void		pipex(t_minishell *data);
 
+int			ft_error(char **parsed_line, int i);
+
 /* Built-ins */
 
 void	ft_built_in_cd(char **full_cmd);
