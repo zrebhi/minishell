@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:24:08 by bgresse           #+#    #+#             */
-/*   Updated: 2023/03/02 16:17:07 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 16:31:25 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,15 +74,16 @@ void	ft_built_in_pwd(void)
 
 int	ft_builtins(t_minishell *data)
 {
-	if (!strcmp(data->cmds->full_cmd[0], "pwd"))
+	if (!ft_strcmp(data->cmds->full_cmd[0], "pwd"))
 		return (ft_built_in_pwd(), 1);
-	if (!strcmp(data->cmds->full_cmd[0], "env"))
+	if (!ft_strcmp(data->cmds->full_cmd[0], "env") && \
+	(!data->cmds->full_cmd[1] || !*data->cmds->full_cmd[1]))
 		return (ft_built_in_env(&data->head_env), 1);
-	if (!strcmp(data->cmds->full_cmd[0], "export"))
+	if (!ft_strcmp(data->cmds->full_cmd[0], "export"))
 		return (ft_built_in_export(&data->head_env, data->cmds->full_cmd), 1);
-	if (!strcmp(data->cmds->full_cmd[0], "cd"))
+	if (!ft_strcmp(data->cmds->full_cmd[0], "cd"))
 		return (1);
-	if (!strcmp(data->cmds->full_cmd[0], "unset"))
+	if (!ft_strcmp(data->cmds->full_cmd[0], "unset"))
 		return (1);
 	return (0);
 }

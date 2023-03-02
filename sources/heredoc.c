@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 14:52:56 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/01 15:33:10 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 16:23:20 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ void	ft_check_heredoc(char **parsed_line, t_cmdlist *cmds)
 	i = -1;
 	while (parsed_line[++i])
 	{
-		if (!strcmp(parsed_line[i], "|"))
+		if (!ft_strcmp(parsed_line[i], "|"))
 			ft_redirect_pipe(&cmds);
-		else if (!strcmp(parsed_line[i], "<<"))
+		else if (!ft_strcmp(parsed_line[i], "<<"))
 			ft_redirect_heredoc(parsed_line, cmds, i);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 19:37:03 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/02/28 11:35:19 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 16:28:01 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,8 @@ void		ft_quotes(char const *s, int *j);
 int			ft_separator(char c, char *charset);
 char		**ft_free_strs(char **strs);
 
-static int	ft_words(char const *s, char *charset)
+static int	ft_words(char const *s, char *charset, int i, int words)
 {
-	int	i;
-	int	words;
-
-	i = 0;
-	words = 0;
 	while (s[i])
 	{
 		while (s[i] && ft_separator(s[i], " "))
@@ -34,12 +29,11 @@ static int	ft_words(char const *s, char *charset)
 			i++;
 			if (s[i] == s[i - 1])
 				i++;
-			continue;
+			continue ;
 		}
 		if (!ft_separator(s[i], " ") && s[i])
 			words++;
-		while (s[i] && !ft_separator(s[i], charset) && \
-			!ft_separator(s[i], " "))
+		while (s[i] && !ft_separator(s[i], charset) && !ft_separator(s[i], " "))
 		{
 			i++;
 			ft_quotes(s, &i);
@@ -110,7 +104,7 @@ static char	**ft_lines(char const *s, char *charset, t_split *lines)
 				return (ft_free_strs(lines->strs));
 			lines->i++;
 			lines->x++;
-			continue;
+			continue ;
 		}
 		lines->j = lines->i;
 		ft_lines2(s, charset, lines);
@@ -126,12 +120,12 @@ char	**ft_split_tokens(char const *s, char *charset)
 	lines.x = 0;
 	if (!s)
 		return (0);
-	lines.strs = malloc(sizeof(char *) * (ft_words(s, charset) + 1));
+	lines.strs = malloc(sizeof(char *) * (ft_words(s, charset, 0, 0) + 1));
 	if (!lines.strs)
 		return (NULL);
 	lines.strs = ft_lines(s, charset, &lines);
 	if (lines.strs)
-		lines.strs[ft_words(s, charset)] = 0;
+		lines.strs[ft_words(s, charset, 0, 0)] = 0;
 	return (lines.strs);
 }
 
@@ -140,7 +134,7 @@ char	**ft_split_tokens(char const *s, char *charset)
 // 	int	i;
 // 	char *line = "echo salut >> outfile";
 // 	char **strs;
-	
+
 // 	i = -1;
 // 	printf("%d words\n", ft_words(line, "<|>"));
 // 	strs = ft_split_tokens(line, "<|>");

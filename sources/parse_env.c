@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:06:30 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/02 16:13:35 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 16:28:33 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	ft_parse_env(t_env **head, char **envp)
 	char	*value;
 
 	i = 0;
-	while (envp[i + 1])
+	while (envp[i])
 	{
 		equal = ft_strchr(envp[i], '=');
 		if (equal)

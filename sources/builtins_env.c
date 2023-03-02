@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 12:37:40 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/01 15:56:42 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 16:23:20 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void ft_print_env_sorted(t_env *env)
 	{
 		for (int j = 0; j < count - i - 1; j++)
 		{
-			if (strcmp(array[j]->key, array[j+1]->key) > 0)
+			if (ft_strcmp(array[j]->key, array[j+1]->key) > 0)
 			{
 				t_env *temp = array[j];
 				array[j] = array[j+1];
