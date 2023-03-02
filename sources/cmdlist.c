@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 16:12:12 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/01 15:42:17 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 16:08:36 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,13 +113,12 @@ t_cmdlist	*ft_cmdlist(char *cmd_line, t_minishell *data)
 
 	cmds = 0;
 	ft_newnode(&cmds);
+	cmd_line = ft_expand_var(&data->head_env, cmd_line);
 	parsed_line = ft_split_tokens(cmd_line, "<|>");
-	parsed_line = ft_expand_var(&data->head_env, parsed_line);
-	parsed_line = ft_expand_path(&data->head_env, parsed_line);
 	parsed_line = ft_remove_quotes(parsed_line);
-	ft_check_heredoc(parsed_line, cmds);
 	if (!ft_redirection(parsed_line, cmds))
 		return (0);
+	ft_check_heredoc(parsed_line, cmds);
 	ft_fullcmds(parsed_line, cmds, 0, 0);
 	return (cmds);
 }

@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 14:51:24 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/01 15:34:41 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 12:25:56 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	ft_redirection(char **parsed_line, t_cmdlist *cmds)
 		if (ft_error(parsed_line, i))
 		{
 			ft_print_error(parsed_line, i);
+			g_status = 2;
 			return (0);
 		}
 	}

@@ -66,7 +66,7 @@ typedef struct s_minishell
 int         g_status;
 
 char		**ft_pathfinder(t_env **head);
-char		**ft_expand_var(t_env **head, char **cmds);
+char		*ft_expand_var(t_env **head, char *cmds);
 void		ft_parse_env(t_env **head, char **envp);
 char		**ft_expand_path(t_env **head, char **cmds);
 
@@ -82,8 +82,8 @@ int			ft_error(char **parsed_line, int i);
 
 /* Built-ins */
 
-void	ft_built_in_cd(char **full_cmd);
-void	ft_built_in_exit(void);
+void	ft_built_in_cd(t_env **head, char **full_cmd);
+void	ft_built_in_exit(t_minishell *data);
 void	ft_built_in_env(t_env **head);
 void	ft_built_in_pwd(void);
 void    ft_built_in_export(t_env **head, char **full_cmd);

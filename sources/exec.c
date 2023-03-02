@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 13:17:49 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/01 15:37:37 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 12:19:48 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,12 @@ void	ft_exec(t_minishell *data)
 	}
 	if (!ft_strncmp(data->cmds->full_cmd[0], "./", 2) \
 	&& access(data->cmds->full_cmd[0], X_OK) == -1)
-		return (perror(data->cmds->full_cmd[0]));
+		return (perror(data->cmds->full_cmd[0]), exit(126));
 	ft_putstr_fd("command not found: ", 2);
-	ft_putstr_fd(data->cmds->full_cmd[0], 2);
+	if (data->cmds->full_cmd[0])
+		ft_putstr_fd(data->cmds->full_cmd[0], 2);
 	ft_putstr_fd("\n", 2);
-	return ;
+	exit(127);
 }
 
 /* Handles everything related to children processes. */
@@ -110,7 +111,6 @@ and waits for children processes to be done */
 
 void	pipex(t_minishell *data)
 {
-	int			status;
 	t_cmdlist	*head;
 
 	head = data->cmds;
@@ -125,8 +125,9 @@ void	pipex(t_minishell *data)
 	data->cmds = head;
 	while (data->cmds)
 	{
-		waitpid(data->cmds->cmd_pid, &status, 0);
+		waitpid(data->cmds->cmd_pid, &g_status, 0);
+		g_status = WEXITSTATUS(g_status);
 		data->cmds = data->cmds->next;
 	}
-	exit (0);
+	exit (g_status);
 }

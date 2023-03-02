@@ -6,11 +6,13 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 16:02:59 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/01 15:25:22 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 12:59:20 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+extern int g_status;
 
 void	data_init(int argc, char **argv, char **envp, t_minishell *data)
 {
@@ -19,6 +21,7 @@ void	data_init(int argc, char **argv, char **envp, t_minishell *data)
 	data->envp = envp;
 	ft_parse_env(&data->head_env, data->envp);
 	data->paths = ft_pathfinder(&data->head_env);
+	g_status = 0;
 }
 
 static char	*get_prompt(t_env *head, char *key)
@@ -41,7 +44,6 @@ void	ft_special_builtins(t_minishell *data);
 void	ft_prompt(t_minishell *data)
 {
 	char		*buffer;
-	int			status;
 	int			pid;
 	char		*prompt;
 
@@ -51,6 +53,8 @@ void	ft_prompt(t_minishell *data)
 		buffer = readline(prompt);
 		if (!buffer)
 			break ;
+		if (!*buffer)
+			continue;
 		add_history(buffer);
 		data->cmds = ft_cmdlist(buffer, data);
 		// ft_print_cmdlist(data->cmds);
@@ -60,17 +64,19 @@ void	ft_prompt(t_minishell *data)
 			pid = fork();
 			if (pid == 0)
 				pipex(data);
-			waitpid(pid, &status, 0);
+			waitpid(pid, &g_status, 0);
+			g_status = WEXITSTATUS(g_status);
 		}
 	}
-	printf("Ciao, Bye !");
+	printf("exit\n");
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_minishell	data;
+	t_minishell	*data;
 
-	data_init(argc, argv, envp, &data);
-	ft_prompt(&data);
-	return (0);
+	data = malloc(sizeof(t_minishell));
+	data_init(argc, argv, envp, data);
+	ft_prompt(data);
+	return (g_status);
 }

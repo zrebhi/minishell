@@ -6,13 +6,31 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 15:06:30 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/01 15:32:19 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/02 16:13:35 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 int	ft_list_size(t_env *head);
+
+void	ft_set_env(t_env **head, char *key, char *value)
+{
+	t_env	*temp;
+
+	temp = *head;
+	while (temp)
+	{
+		if (!ft_strcmp(temp->key, key))
+		{
+			free(temp->value);
+			temp->value = ft_strdup(value);
+			return ;
+		}
+		temp = temp->next;
+	}
+	add_node(*head, key, value);
+}
 
 char	**ft_join_envp(t_env **head)
 {
@@ -40,7 +58,7 @@ void	ft_parse_env(t_env **head, char **envp)
 	char	*value;
 
 	i = 0;
-	while (envp[i])
+	while (envp[i + 1])
 	{
 		equal = ft_strchr(envp[i], '=');
 		if (equal)
