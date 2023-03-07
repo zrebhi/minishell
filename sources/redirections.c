@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 14:51:24 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/02 16:23:20 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/06 12:44:18 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,33 +28,42 @@ void	ft_redirect_pipe(t_cmdlist **cmds)
 
 void	ft_redirect_infile(char **parsed_line, t_cmdlist *cmds, int i)
 {
-	if (!ft_error(parsed_line, i))
+	if (!ft_error(parsed_line, i) && !cmds->error)
 	{
 		cmds->infile = open(parsed_line[i + 1], O_RDONLY);
 		if (cmds->infile == -1)
+		{
 			perror("open infile");
+			cmds->error = 1;
+		}
 	}
 }
 
 void	ft_redirect_outfile(char **parsed_line, t_cmdlist *cmds, int i)
 {
-	if (!ft_error(parsed_line, i))
+	if (!ft_error(parsed_line, i) && !cmds->error)
 	{
 		cmds->outfile = open(parsed_line[i + 1], \
 		O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (cmds->outfile == -1)
+		{
 			perror("open outfile");
+			cmds->error = 1;
+		}
 	}	
 }
 
 void	ft_redirect_outfile_append(char **parsed_line, t_cmdlist *cmds, int i)
 {
-	if (!ft_error(parsed_line, i))
+	if (!ft_error(parsed_line, i) && !cmds->error)
 	{
 		cmds->outfile = open(parsed_line[i + 1], O_WRONLY | O_CREAT | \
 				O_APPEND, 0644);
 		if (cmds->outfile == -1)
+		{
 			perror("open outfile");
+			cmds->error = 1;
+		}
 	}
 }
 

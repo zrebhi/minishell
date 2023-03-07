@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/03/03 16:11:01 by zrebhi            #+#    #+#              #
+#    Updated: 2023/03/03 20:16:13 by zrebhi           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME		   :=    minishell
 
 INC            :=    minishell.h
@@ -6,7 +18,9 @@ INC_DIR        :=    includes/
 HEADERS        := $(addprefix $(INC_DIR), $(INC))
 
 SRC_DIR        :=    sources/
-SRC            :=    builtins.c builtins_env.c cmdlist.c cmdlist_utils.c env_list_utils.c exec.c expand.c expand_utils.c heredoc.c main.c parse_env.c redirections.c
+SRC            :=    builtins.c builtins_env.c cmdlist.c cmdlist_utils.c \
+					 env_list_utils.c exec.c expand.c expand_utils.c heredoc.c \
+					 main.c parse_env.c redirections.c signals.c signals_handlers.c
 
 LIBFT_DIR	   :=    libft/
 LIBFT_A		   :=    $(LIBFT_DIR)libft.a

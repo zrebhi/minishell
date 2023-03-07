@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:24:08 by bgresse           #+#    #+#             */
-/*   Updated: 2023/03/02 16:31:25 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/06 15:59:12 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,12 @@ void	ft_built_in_exit(t_minishell *data)
 
 	i = -1;
 	printf("exit\n");
-	if (!data->cmds->full_cmd[1]|| !*data->cmds->full_cmd[1])
+	if (!data->cmds->full_cmd[1] || !*data->cmds->full_cmd[1])
 		exit(0);
 	while (data->cmds->full_cmd[1][++i])
 	{
-		if (data->cmds->full_cmd[1][i] < '0' || data->cmds->full_cmd[1][i] > '9')
+		if (data->cmds->full_cmd[1][i] < '0' \
+		|| data->cmds->full_cmd[1][i] > '9')
 		{
 			ft_putstr_fd("exit: ", 2);
 			ft_putstr_fd(data->cmds->full_cmd[1], 2);
@@ -58,7 +59,7 @@ void	ft_built_in_exit(t_minishell *data)
 	else
 	{
 		exit_code = ft_atoi(data->cmds->full_cmd[1]);
-		exit(exit_code);
+		exit(exit_code%256);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 16:12:12 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/02 16:08:36 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/06 16:24:21 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	ft_fullcmds(char **parsed_line, t_cmdlist *cmds, int i, int j)
 in the input line and useful informations for each of them. */
 
 char	**ft_remove_quotes(char **strs);
-void	ft_check_heredoc(char **parsed_line, t_cmdlist *cmds);
+void	ft_check_heredoc(char *cmd_line, t_cmdlist *cmds, t_env **head);
 int		ft_redirection(char **parsed_line, t_cmdlist *cmds);
 
 t_cmdlist	*ft_cmdlist(char *cmd_line, t_minishell *data)
@@ -113,12 +113,12 @@ t_cmdlist	*ft_cmdlist(char *cmd_line, t_minishell *data)
 
 	cmds = 0;
 	ft_newnode(&cmds);
+	ft_check_heredoc(cmd_line, cmds, &data->head_env);
 	cmd_line = ft_expand_var(&data->head_env, cmd_line);
 	parsed_line = ft_split_tokens(cmd_line, "<|>");
 	parsed_line = ft_remove_quotes(parsed_line);
 	if (!ft_redirection(parsed_line, cmds))
 		return (0);
-	ft_check_heredoc(parsed_line, cmds);
 	ft_fullcmds(parsed_line, cmds, 0, 0);
 	return (cmds);
 }

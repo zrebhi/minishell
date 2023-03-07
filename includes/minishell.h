@@ -4,19 +4,24 @@
 #include "../libft/includes/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <signal.h>
 #include <sys/wait.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <termios.h>
 #include <fcntl.h>
 
 #ifndef PATH_MAX
 # define PATH_MAX 1024
 #endif
 
+# define STDOUT	1
 #define SQUOTE 39
 #define DQUOTE 34
 #define DOLLAR 36
 #define TILDE 126
+
+
 typedef int	t_pid;
 
 #define YELLOW "\033[1;33m"
@@ -30,11 +35,14 @@ typedef int	t_pid;
 
 typedef int	t_pid;
 
+int	g_status;
+
 typedef struct s_cmdlist
 {
 	char            	**full_cmd;
 	int             	infile;
 	int	            	outfile;
+	int					error;
 	int					here_doc;
 	int					here_doc_pipe[2];
 	char				*limiter;
@@ -61,9 +69,9 @@ typedef struct s_minishell
 	int			argc;
 
 	int			end[2];
+	
+	int			status;
 }				t_minishell;
-
-int         g_status;
 
 char		**ft_pathfinder(t_env **head);
 char		*ft_expand_var(t_env **head, char *cmds);
@@ -79,6 +87,10 @@ void		ft_print_cmdlist(t_cmdlist *cmds);
 void		pipex(t_minishell *data);
 
 int			ft_error(char **parsed_line, int i);
+
+/* Signals */
+
+void	unplug_signals();
 
 /* Built-ins */
 

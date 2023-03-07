@@ -6,13 +6,13 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 13:17:49 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/02 12:19:48 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/07 15:10:28 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_builtins(t_minishell *data);
+int		ft_builtins(t_minishell *data);
 
 /* Handles the executions of the commands and returns the corresponding error
 if the command was not found. */
@@ -22,6 +22,9 @@ void	ft_exec(t_minishell *data)
 	int		i;
 	char	*cmd;
 
+	if (!ft_strncmp(data->cmds->full_cmd[0], "./", 2) \
+	&& access(data->cmds->full_cmd[0], X_OK) == -1)
+		return (perror(data->cmds->full_cmd[0]), exit(126));
 	i = -1;
 	execve(data->cmds->full_cmd[0], data->cmds->full_cmd, data->envp);
 	if (data->paths)
@@ -35,9 +38,6 @@ void	ft_exec(t_minishell *data)
 			free(cmd);
 		}
 	}
-	if (!ft_strncmp(data->cmds->full_cmd[0], "./", 2) \
-	&& access(data->cmds->full_cmd[0], X_OK) == -1)
-		return (perror(data->cmds->full_cmd[0]), exit(126));
 	ft_putstr_fd("command not found: ", 2);
 	if (data->cmds->full_cmd[0])
 		ft_putstr_fd(data->cmds->full_cmd[0], 2);
@@ -49,7 +49,7 @@ void	ft_exec(t_minishell *data)
 
 void	ft_incubator(t_minishell *data)
 {
-	if (!data->cmds->here_doc && close(data->end[0]) == -1)
+	if (close(data->end[0]) == -1)
 		return (perror("close pipe"));
 	if (data->cmds->infile > 0)
 		if (dup2(data->cmds->infile, STDIN_FILENO) == -1)
@@ -60,6 +60,8 @@ void	ft_incubator(t_minishell *data)
 	if (data->cmds->outfile == 0)
 		if (dup2(data->end[1], STDOUT_FILENO) == -1)
 			return (perror("dup2 end[1]"));
+	if (close(data->end[1]) == -1)
+		return ((void)perror("close pipe"));
 	if (ft_builtins(data))
 		exit(0);
 	ft_exec(data);
@@ -70,7 +72,7 @@ int	pipex_heredoc(t_minishell *data)
 {
 	if (data->cmds->here_doc == 1)
 	{
-		if (!data->cmds->limiter)
+		if (!data->cmds->limiter || data->cmds->error)
 			return (0);
 		if (dup2(data->cmds->here_doc_pipe[0], STDIN_FILENO) == -1)
 			return (perror("dup2 heredoc"), 0);
@@ -83,10 +85,14 @@ int	pipex_heredoc(t_minishell *data)
 /* Creates a child process for every command and links them together
 with pipes */
 
+void	set_exec_signals(void);
+
 void	pipex_commands(t_minishell *data)
 {
 	while (data->cmds)
 	{
+		if (data->cmds->error)
+			data->cmds = data->cmds->next;
 		if (!pipex_heredoc(data))
 			return ;
 		if (pipe(data->end) == -1)
@@ -94,10 +100,10 @@ void	pipex_commands(t_minishell *data)
 		data->cmds->cmd_pid = fork();
 		if (data->cmds->cmd_pid == -1)
 			return ((void)perror("Fork"));
-		if (data->cmds->cmd_pid != 0 && close(data->end[1]) == -1)
-			return ((void)perror("close pipe"));
 		if (data->cmds->cmd_pid == 0)
 			ft_incubator(data);
+		if (close(data->end[1]) == -1)
+			return ((void)perror("close pipe"));
 		if (dup2(data->end[0], STDIN_FILENO) == -1)
 			return ((void)perror("dup2 end[0]"));
 		if (close(data->end[0]) == -1)
@@ -114,6 +120,7 @@ void	pipex(t_minishell *data)
 	t_cmdlist	*head;
 
 	head = data->cmds;
+	set_exec_signals();
 	pipex_commands(data);
 	data->cmds = head;
 	while (data->cmds)
@@ -125,8 +132,17 @@ void	pipex(t_minishell *data)
 	data->cmds = head;
 	while (data->cmds)
 	{
-		waitpid(data->cmds->cmd_pid, &g_status, 0);
+		waitpid(data->cmds->cmd_pid, &data->status, 0);
 		g_status = WEXITSTATUS(g_status);
+		data->cmds = data->cmds->next;
+	}
+	data->cmds = head;
+	while (data->cmds)
+	{
+		if (close(data->cmds->outfile) == -1)
+				perror("close outfile");
+		if (close(data->cmds->infile) == -1)
+				perror("close infile");
 		data->cmds = data->cmds->next;
 	}
 	exit (g_status);

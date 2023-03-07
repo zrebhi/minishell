@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgresse <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 15:58:00 by bgresse           #+#    #+#             */
-/*   Updated: 2022/09/06 16:05:35 by bgresse          ###   ########lyon.fr   */
+/*   Updated: 2023/03/03 18:29:56 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,11 @@ int	ft_strcmp(char *s1, char *s2)
 	while (s1[i] || s2[i])
 	{
 		if (s1[i] == s2[i])
-		{
 			i++;
-		}
 		else if (s1[i] < s2[i])
-		{
 			return (-1);
-		}
 		else
-		{
 			return (1);
-		}
 	}
 	return (0);
 }
