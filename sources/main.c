@@ -6,7 +6,7 @@
 /*   By: zrebhi <zrebhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 16:02:59 by zrebhi            #+#    #+#             */
-/*   Updated: 2023/03/07 15:04:52 by zrebhi           ###   ########.fr       */
+/*   Updated: 2023/03/07 19:55:02 by zrebhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,23 +70,17 @@ void	ft_prompt(t_minishell *data)
 				g_status = WEXITSTATUS(g_status);
 			while (data->cmds)
 			{
-				if (data->cmds->here_doc)
-					if (close(data->cmds->here_doc_pipe[0]) == -1)
-						perror("close pipe");
+				if (data->cmds->here_doc && close(data->cmds->here_doc_pipe[0]) == -1)
+					perror("close pipe main");
+				if (data->cmds->outfile > 1 && close(data->cmds->outfile) == -1)
+					perror("close outfile");
+				if (data->cmds->infile > 1 && close(data->cmds->infile) == -1)
+					perror("close infile");
 				data->cmds = data->cmds->next;
 			}
-			while (data->cmds)
-			{
-				if (data->cmds->outfile > 1)
-					if (close(data->cmds->outfile) == -1)
-						perror("close outfile");
-				if (data->cmds->infile > 1)
-					if (close(data->cmds->infile) == -1)
-						perror("close infile");
-			}
 		}
-	}
-	printf("exit\n");
+	}	
+		printf("exit\n");
 }
 
 int	main(int argc, char **argv, char **envp)
